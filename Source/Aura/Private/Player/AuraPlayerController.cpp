@@ -4,11 +4,78 @@
 #include "Player/AuraPlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Interaction/EnemyInterface.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
 	bReplicates = true;
 }
+
+void AAuraPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+
+	CursorTrace();
+}
+
+void AAuraPlayerController::CursorTrace()
+{
+	FHitResult CursorHit;
+	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
+	if(!CursorHit.bBlockingHit) return;
+
+	LastActor = ThisActor;
+	ThisActor = CursorHit.GetActor();
+
+	/**
+	 * Line trace from cursor. There are several scenarios:
+	 *  A. LastActor is null && ThisActor is null
+	 *		- Do nothing
+	 *	B. LastActor is null && ThisActor is valid 第一帧放置在需要高亮显示的Actor上，需要高亮
+	 *		- Highlight ThisActor
+	 *	C. LastActor is valid && ThisActor is null 最后一帧放置在需要高亮显示的Actor上，需要取消高亮
+	 *		- UnHighlight LastActor
+	 *	D. Both actors are valid, but LastActor != ThisActor 切换到了另一个需要高亮的，需要将前者取消，后者显示
+	 *		- UnHighlight LastActor, and Highlight ThisActor 
+	 *	E. Both actors are valid, and are the same actor 
+	 *		- Do nothing
+	 */
+	if (LastActor == nullptr)
+	{
+		if (ThisActor != nullptr)
+		{
+			// Case B
+			ThisActor->HighlightActor();
+		}
+		else
+		{
+			// Case A - both are null, do nothing
+		}
+	}
+	else // LastActor is valid
+	{
+		if (ThisActor == nullptr)
+		{
+			// Case C
+			LastActor->UnHighlightActor();
+		}
+		else // both actors are valid
+		{
+			if (LastActor != ThisActor)
+			{
+				// Case D
+				LastActor->UnHighlightActor();
+				ThisActor->HighlightActor();
+			}
+			else
+			{
+				// Case E - do nothing
+			}
+		}
+	}
+}
+
+
 void AAuraPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
