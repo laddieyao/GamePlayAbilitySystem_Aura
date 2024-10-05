@@ -45,6 +45,8 @@ void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySyst
 	UOverlayWidgetController* WidgetController = GetOverlayWidgetController(WidgetControllerParams);
 	
 	OverlayWidget->SetWidgetController(WidgetController);
-	
+
+	// 这时可以广播初始值
+	WidgetController->BroadcastInitialValues();
 	Widget->AddToViewport();
 }
