@@ -5,8 +5,6 @@
 
 #include "Engine/Engine.h"
 
-
-
 /**
  * 进行一些委托的绑定
  */ 
@@ -19,10 +17,7 @@ void UAuraAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* Ability
 {
 	FGameplayTagContainer TagsContainer;
 	EffectSpec.GetAllAssetTags(TagsContainer);
-	for (const FGameplayTag Tag : TagsContainer)
-	{
-		//TODO: Broadcast the tag to the Widget Controller
-		const FString Msg = FString::Printf(TEXT("Ge TAG : %s"), *Tag.ToString());
-		GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Blue, Msg);
-	}
+	
+	// 在此进行广播
+	EffectAssetTags.Broadcast(TagsContainer);
 }
