@@ -21,7 +21,7 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 
 private:
-	void InitAbilityActorInfo();
+	virtual void InitAbilityActorInfo() override;
 
 protected:
 	virtual void BeginPlay() override;

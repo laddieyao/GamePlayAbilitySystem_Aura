@@ -6,6 +6,7 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "Aura/Aura.h"
+#include "Components/SkeletalMeshComponent.h"
 
 AAuraEnemy::AAuraEnemy()
 {
@@ -35,5 +36,13 @@ void AAuraEnemy::UnHighlightActor()
 void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	InitAbilityActorInfo();
+}
+
+void AAuraEnemy::InitAbilityActorInfo()
+{
+	// 设置AbilitySystem的Actor信息，包括Owner和Avatar
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	// 调用AbilitySystem初始化一些信息，包括绑定一些委托
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 }
