@@ -5,6 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayEffectExtension.h"
+#include "Engine/Engine.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/PlayerController.h"
 #include "Net/UnrealNetwork.h"
@@ -28,6 +29,13 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
 }
 
+
+
+/**
+ * 在AttributeChange生效前调用的函数，NewValue是这次改变后的新值
+ * @param Attribute 
+ * @param NewValue 
+ */
 void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 	Super::PreAttributeChange(Attribute, NewValue);
@@ -40,6 +48,18 @@ void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxMana());
 	}
+
+	// if(Attribute == GetHealthAttribute())
+	// {
+	// 	// GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Red, FString::Printf(TEXT("HealthBaseValue: %f"),
+	// 	// 	GetHealthAttribute().GetGameplayAttributeData(this)->GetBaseValue()));
+	// 	// GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Red, FString::Printf(TEXT("HealthCurrentValue: %f"),
+	// 	// 	GetHealthAttribute().GetGameplayAttributeData(this)->GetCurrentValue()));
+	// 	UE_LOG(LogTemp, Warning, TEXT("HealthBaseValue: %f"),
+	// 		GetHealthAttribute().GetGameplayAttributeData(this)->GetBaseValue());
+	// 	UE_LOG(LogTemp, Warning, TEXT("HealthCurrentValue: %f"),
+	// 		GetHealthAttribute().GetGameplayAttributeData(this)->GetCurrentValue());
+	// }
 }
 
 void UAuraAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
@@ -91,10 +111,38 @@ void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetAvatarActor);
 	}
 }
+
+
+/**
+ * 
+ * @param Data 
+ */
 void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
 	
 	FEffectProperties Props;
-	SetEffectProperties(Data, Props);               
+	SetEffectProperties(Data, Props);
+
+	// 在此处限制Health和Mana在合理范围内，限制的是BaseValue
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
+	}
+	if (Data.EvaluatedData.Attribute == GetManaAttribute())
+	{
+		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
+	}
+
+	// if(Data.EvaluatedData.Attribute == GetHealthAttribute())
+	// {
+	// 	// GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Red, FString::Printf(TEXT("HealthBaseValue: %f"),
+	// 	// 	GetHealthAttribute().GetGameplayAttributeData(this)->GetBaseValue()));
+	// 	// GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Red, FString::Printf(TEXT("HealthCurrentValue: %f"),
+	// 	// 	GetHealthAttribute().GetGameplayAttributeData(this)->GetCurrentValue()));
+	// 	UE_LOG(LogTemp, Warning, TEXT("HealthBaseValue: %f"),
+	// 		GetHealthAttribute().GetGameplayAttributeData(this)->GetBaseValue());
+	// 	UE_LOG(LogTemp, Warning, TEXT("HealthCurrentValue: %f"),
+	// 		GetHealthAttribute().GetGameplayAttributeData(this)->GetCurrentValue());
+	// }
 }

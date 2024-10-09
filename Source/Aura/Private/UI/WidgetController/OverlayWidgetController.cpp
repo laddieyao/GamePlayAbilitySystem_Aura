@@ -66,12 +66,12 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 
 				// 静态方法返回FName为Message的Tag
 				FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
-				UE_LOG(LogTemp, Warning, TEXT("%s"), *MessageTag.ToString());
-				UE_LOG(LogTemp, Warning, TEXT("%s"), *Tag.ToString());
+				// UE_LOG(LogTemp, Warning, TEXT("%s"), *MessageTag.ToString());
+				// UE_LOG(LogTemp, Warning, TEXT("%s"), *Tag.ToString());
 				if (Tag.MatchesTag(MessageTag))
 				{
-					UE_LOG(LogTemp, Warning, TEXT("%s"), *MessageTag.ToString());
-					UE_LOG(LogTemp, Warning, TEXT("%s"), *Tag.ToString());
+					// UE_LOG(LogTemp, Warning, TEXT("%s"), *MessageTag.ToString());
+					// UE_LOG(LogTemp, Warning, TEXT("%s"), *Tag.ToString());
 					const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
 					MessageWidgetRowDelegate.Broadcast(*Row);
 				}
