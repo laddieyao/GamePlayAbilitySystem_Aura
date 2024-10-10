@@ -48,6 +48,8 @@ void AAuraCharacterBase::InitializeDefaultAttributes() const
 {
 	ApplyEffectToSelf(DefaultPrimaryAttributes, 1.f);
 	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
+	// VitalAttributes中的属性包括Health，Mana在初始时都需要被设置为MaxHealth和MaxMana的值
+	ApplyEffectToSelf(DefaultVitalAttributes,1.f);
 }
 
 
