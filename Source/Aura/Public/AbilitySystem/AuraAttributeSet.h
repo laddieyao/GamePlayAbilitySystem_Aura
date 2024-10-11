@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
 #include "AttributeSet.h"
+#include "../../../../../../Program Files/Epic Games/UE_5.4/Engine/Plugins/Editor/GameplayTagsEditor/Source/GameplayTagsEditor/Private/GameplayTagEditorUtilities.h"
 #include "GameFramework/Character.h"
 #include "AuraAttributeSet.generated.h"
 
@@ -52,6 +53,8 @@ public:
 
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+
+	TMap<FGameplayTag, FGameplayAttribute> TagsToAttributes;
 
 	/*
 	 * Primary Attributes
