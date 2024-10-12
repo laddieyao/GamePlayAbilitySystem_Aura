@@ -197,7 +197,7 @@ void AAuraPlayerController::AutoRun()
 		const FVector Direction = Spline->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World);
 		ControlledPawn->AddMovementInput(Direction);
 		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
-		// 太短的距离不会触发
+		// 太短的距离
 		if (DistanceToDestination <= AutoRunAcceptanceRadius)
 		{
 			bAutoRunning = false;
