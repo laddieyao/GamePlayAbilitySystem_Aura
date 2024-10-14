@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Components/WidgetComponent.h"
-#include "DamageTexttComponent.generated.h"
+#include "DamageTextComponent.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class AURA_API UDamageTexttComponent : public UWidgetComponent
+class AURA_API UDamageTextComponent : public UWidgetComponent
 {
 	GENERATED_BODY()
 public:
