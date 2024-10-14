@@ -221,16 +221,16 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
 	}
+	if(Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+	{
+		const float LocalIncomingDamage = GetIncomingDamage();
+		SetIncomingDamage(0.f);
+		if(LocalIncomingDamage > 0.f)
+		{
+			const float NewHealth = GetHealth() - LocalIncomingDamage;
+			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
 
-	// if(Data.EvaluatedData.Attribute == GetHealthAttribute())
-	// {
-	// 	// GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Red, FString::Printf(TEXT("HealthBaseValue: %f"),
-	// 	// 	GetHealthAttribute().GetGameplayAttributeData(this)->GetBaseValue()));
-	// 	// GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Red, FString::Printf(TEXT("HealthCurrentValue: %f"),
-	// 	// 	GetHealthAttribute().GetGameplayAttributeData(this)->GetCurrentValue()));
-	// 	UE_LOG(LogTemp, Warning, TEXT("HealthBaseValue: %f"),
-	// 		GetHealthAttribute().GetGameplayAttributeData(this)->GetBaseValue());
-	// 	UE_LOG(LogTemp, Warning, TEXT("HealthCurrentValue: %f"),
-	// 		GetHealthAttribute().GetGameplayAttributeData(this)->GetCurrentValue());
-	// }
+			const bool bFatal = NewHealth <= 0.f;
+		}
+	}
 }
