@@ -68,8 +68,13 @@ void AAuraEnemy::BeginPlay()
 				OnMaxHealthChanged.Broadcast(Data.NewValue);
 			}
 		);
-		OnHealthChanged.Broadcast(AuraAS->GetHealth());
-		OnMaxHealthChanged.Broadcast(AuraAS->GetMaxHealth());
+		if(HasAuthority())
+		{
+			OnHealthChanged.Broadcast(AuraAS->GetHealth());
+			OnMaxHealthChanged.Broadcast(AuraAS->GetMaxHealth());
+		}
+		// OnHealthChanged.Broadcast(AuraAS->GetHealth());
+		// OnMaxHealthChanged.Broadcast(AuraAS->GetMaxHealth());
 	}
 }
 
