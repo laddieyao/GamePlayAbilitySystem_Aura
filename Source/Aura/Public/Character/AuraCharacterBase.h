@@ -8,6 +8,8 @@
 #include "Interaction/CombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
+class UMaterialInstanceDynamic;
+class UMaterialInstance;
 class UGameplayAbility;
 class UGameplayEffect;
 class UAttributeSet;
@@ -62,6 +64,21 @@ protected:
 	virtual void InitializeDefaultAttributes() const;
 
 	void AddCharacterAbilities() const;
+
+	/* Dissolve Effects */
+	void Dissolve();
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
 private:
 	UPROPERTY(EditAnywhere, Category = "Attributes")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
