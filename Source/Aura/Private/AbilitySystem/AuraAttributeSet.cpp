@@ -261,7 +261,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
 			}
 
-			ShowFloatingText(Props, bFatal);
+			ShowFloatingText(Props, LocalIncomingDamage);
 		}
 	}
 }
