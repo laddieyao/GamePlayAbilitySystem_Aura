@@ -55,7 +55,8 @@ public:
 	FGameplayTag Damage_Lightning;
 	FGameplayTag Damage_Arcane;
 	FGameplayTag Damage_Physical;
-	
+
+	// Damage类型 --> Resistance类型
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
 
 	FGameplayTag Effects_HitReact;
