@@ -223,6 +223,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	Super::PostGameplayEffectExecute(Data);
 	
 	FEffectProperties Props;
+	// 设置一些此次已应用的GameplayEffect的信息
 	SetEffectProperties(Data, Props);
 
 	// 在此处限制Health和Mana在合理范围内，限制的是BaseValue
