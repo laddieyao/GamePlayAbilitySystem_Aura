@@ -31,6 +31,9 @@ public:
 
 	UFUNCTION(Client, Reliable)
 	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit);
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE FVector GetStartForward() const {return WS_Forward; }
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
@@ -67,6 +70,9 @@ private:
 	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
 	
 	UAuraAbilitySystemComponent* GetASC();
+
+	FVector WS_Forward;
+	FVector AD_Forward;
 
 	/*
 	 *	Click to Move

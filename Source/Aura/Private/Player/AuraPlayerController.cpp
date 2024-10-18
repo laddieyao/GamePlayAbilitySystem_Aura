@@ -12,14 +12,17 @@
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "ActorFactories/ActorFactoryPlayerStart.h"
 #include "Components/SplineComponent.h"
 #include "Engine/Engine.h"
 #include "Engine/HitResult.h"
 #include "Engine/LocalPlayer.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
+#include "GameFramework/PlayerStart.h"
 #include "Input/AuraInputComponent.h"
 #include "Interaction/EnemyInterface.h"
+#include "Kismet/GameplayStatics.h"
 #include "Player/AuraPlayerState.h"
 #include "UI/Widget/DamageTextComponent.h"
 
@@ -28,6 +31,7 @@ AAuraPlayerController::AAuraPlayerController()
 	bReplicates = true;
 
 	Spline = CreateDefaultSubobject<USplineComponent>("Spline");
+	
 }
 
 void AAuraPlayerController::PlayerTick(float DeltaTime)
@@ -224,6 +228,24 @@ void AAuraPlayerController::AutoRun()
 void AAuraPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	TArray<AActor*> PlayerStartActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), PlayerStartActors);
+
+	for (AActor* Actor : PlayerStartActors)
+	{
+		APlayerStart* PlayerStart = Cast<APlayerStart>(Actor);
+		WS_Forward = PlayerStart->GetActorRotation().Vector();
+		// 定义一个绕 Z 轴旋转 -90 度的旋转器
+		FRotator Rotator = FRotator(0.0f, 90.0f, 0.0f);
+		AD_Forward = Rotator.RotateVector(WS_Forward);
+		if (PlayerStart && PlayerStart->ActorHasTag(FName("SpawnPoint1")))
+		{
+			UE_LOG(LogTemp, Log, TEXT("找到指定的 PlayerStart: %s"), *PlayerStart->GetName());
+			// 执行进一步操作，例如设置玩家的起始位置
+		}
+	}
+	
 	// 断言判断是否存在有效的 AuraContext
 	check(AuraContext);
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
@@ -271,8 +293,14 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
  
 	if (APawn* ControlledPawn = GetPawn<APawn>())
 	{
-		ControlledPawn->AddMovementInput(FVector::ForwardVector, InputAxisVector.Y);
-		ControlledPawn->AddMovementInput(FVector::RightVector, InputAxisVector.X);
+		// ControlledPawn->AddMovementInput(FVector::ForwardVector, InputAxisVector.Y);
+		// ControlledPawn->AddMovementInput(FVector::RightVector, InputAxisVector.X);
+
+		// ControlledPawn->AddMovementInput(FVector::ForwardVector, -InputAxisVector.X);
+		// ControlledPawn->AddMovementInput(FVector::RightVector, InputAxisVector.Y);
+
+		ControlledPawn->AddMovementInput(WS_Forward, InputAxisVector.Y);
+		ControlledPawn->AddMovementInput(AD_Forward, InputAxisVector.X);
     
 	}
 }
