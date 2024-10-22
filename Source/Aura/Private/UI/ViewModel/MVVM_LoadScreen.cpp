@@ -3,8 +3,11 @@
 
 #include "UI/ViewModel/MVVM_LoadScreen.h"
 
+#include "DSP/PassiveFilter.h"
+#include "Engine/World.h"
 #include "Game/AuraGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
+#include "Player/AuraPlayerController.h"
 #include "UI/ViewModel/MVVM_LoadSlot.h"
 
 void UMVVM_LoadScreen::InitializeLoadSlots()
@@ -74,6 +77,26 @@ void UMVVM_LoadScreen::DeleteButtonPressed()
 		SelectedSlot->SlotStatus = Vacant;
 		SelectedSlot->InitializeSlot();
 		SelectedSlot->EnableSelectSlotButton.Broadcast(true);
+	}
+}
+
+void UMVVM_LoadScreen::PlayButtonPressed()
+{
+	// if(IsValid(SelectedSlot))
+	// {
+	// 	FString MapName = SelectedSlot->GetMapName();
+	// 	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+	// 	TSoftObjectPtr<UWorld> ToWorld = AuraGameMode->Maps.FindChecked(MapName);
+	// 	if(ToWorld)
+	// 	{
+	// 		UGameplayStatics::OpenLevelBySoftObjectPtr(this, ToWorld, true);
+	// 	}
+	// }
+
+	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+	if (IsValid(SelectedSlot))
+	{
+		AuraGameMode->TravelToMap(SelectedSlot);
 	}
 }
 
